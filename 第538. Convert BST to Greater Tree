@@ -1,0 +1,51 @@
+Given a Binary Search Tree (BST), convert it to a Greater Tree such that every key of the original BST is 
+changed to the original key plus sum of all keys greater than the original key in BST.
+
+Example:
+
+Input: The root of a Binary Search Tree like this:
+              5
+            /   \
+           2     13
+
+Output: The root of a Greater Tree like this:
+             18
+            /   \
+          20     13
+思路:
+2.二叉查找树性质：（不存在相同键值的节点）
+1.空树
+2.非空树并且左子树所有节点的键值均小于本节点的键值
+        右子树所有的节点的键值均大于本节点的键值
+该节点的左右子树均为二叉查找树
+
+这道题的思路:每一个节点加上比它大的节点的值，结合二叉搜索树的性质，我们可以看到这是一个"右中左"的搜索。
+然后需要定义一个全局变量用来存储之前遍历到的节点值的和。遍历到的节点就加上该全局变量，然后更新该全局变量。
+需要注意的是最后需要返回TreeNode,而我们上述操作是对节点值进行操作，并不返回，所以需要新定义一个函数，无返回值。
+代码:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    int result = 0;
+    public TreeNode convertBST(TreeNode root) {
+        change(root);
+        return root;
+    }
+    public void change(TreeNode root){
+        if(root == null){
+            return;
+        }
+        change(root.right);
+        root.val += result;
+        result = root.val;
+        change(root.left);
+    }
+    
+}
