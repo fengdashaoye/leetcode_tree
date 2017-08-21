@@ -12,7 +12,8 @@ Given the below binary tree and sum = 22,
         7    2      1
 return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
 思路:这道题很简单，就是简单的先序遍历，当遍历到了叶子节点且和为sum时返回true，否则如果遍历到节点为null则返回false，一开始我还想
-如果sum < root.val也返回false，但是不行，因为每个节点不一定都为正数。
+如果sum < root.val也返回false，但是不行，因为每个节点不一定都为正数。只要存在一条路径就为true，所以用或||，返回false没事，只要返回
+一个true,结果就是true。
 代码:
 /**
  * Definition for a binary tree node.
