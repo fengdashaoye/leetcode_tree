@@ -1,0 +1,43 @@
+Find the sum of all left leaves in a given binary tree.
+
+Example:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.
+
+代码:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    int result = 0;
+    public int sumOfLeftLeaves(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        if(root.left != null){
+            if(root.left.left == null && root.left.right == null){
+                result += root.left.val;
+            }else{
+                result += sumOfLeftLeaves(root.left);
+            }
+        }
+        result += sumOfLeftLeaves(root.right);
+        return result;
+        
+        
+    }
+}
+其实我想到了 if(root.left.left == null && root.left.right == null)这个判定条件，因为判断是否是左叶子节点，只能通过其父亲来判断
+但是后续的没有想的那么清楚。
