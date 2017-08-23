@@ -1,0 +1,48 @@
+Given two binary trees and imagine that when you put one of them to cover the other, some nodes of the two trees are overlapped while the others are not.
+
+You need to merge them into a new binary tree. The merge rule is that if two nodes overlap, then sum node values up as the new value of the merged node. Otherwise, the NOT null node will be used as the node of new tree.
+
+Example 1:
+Input: 
+	Tree 1                     Tree 2                  
+          1                         2                             
+         / \                       / \                            
+        3   2                     1   3                        
+       /                           \   \                      
+      5                             4   7                  
+Output: 
+Merged tree:
+	     3
+	    / \
+	   4   5
+	  / \   \ 
+	 5   4   7
+   思路:合并两棵树上的节点，不能单纯的把一棵树并上另一棵树，合并的结果需要新建一棵树。
+   新建的节点要放到最后才return。其实可以想象，作为最后结果，整棵树完整的建完后才能返回，因此return不能放到前面
+   代码:
+   /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if(t1 == null && t2 == null){
+            return null;
+        }else if(t1 == null){
+            return t2;
+        }else if(t2 == null){
+            return t1;
+        }
+        
+        TreeNode node = new TreeNode(t1.val + t2.val);
+        node.left = mergeTrees(t1.left, t2.left);
+        node.right = mergeTrees(t1.right, t2.right);
+        return node;
+        
+    }
+}
