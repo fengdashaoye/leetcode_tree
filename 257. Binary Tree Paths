@@ -1,0 +1,75 @@
+Given a binary tree, return all root-to-leaf paths.
+
+For example, given the following binary tree:
+
+   1
+ /   \
+2     3
+ \
+  5
+All root-to-leaf paths are:
+
+["1->2->5", "1->3"]
+思路:很简单的一道题，先序遍历，遍历到叶子时把该路径加入list中，然后删除掉叶子节点，因为可能这时候该叶子节点的父亲的右子树了
+需要注意一些边界条件，如
+if(root == null){
+            return list;
+        }
+if(root.left != null){
+            count(root.left, content);
+        }
+        if(root.right != null){
+            count(root.right, content);
+        }
+代码:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    List<String> list = new ArrayList<String>();
+    public List<String> binaryTreePaths(TreeNode root) {
+        if(root == null){
+            return list;
+        }
+        String content = "";
+        count(root, content);
+        
+        return list;
+        
+    }
+    public void count(TreeNode root, String content){
+        if(root.left == null && root.right == null){
+            content += String.valueOf(root.val);
+            /*String result = "";
+            for(int i = 0; i < content.length(); i++){
+                result += content.charAt(i);
+            }*/
+            list.add(content);
+            int i = content.length() - 1;
+            while(i >= 0){
+                if(content.charAt(i) != '-'){
+                    content = content.substring(0, i);
+                }else{
+                    content = content.substring(0, i);
+                    break;
+                }
+                i = content.length() - 1;
+            }
+            return;
+        }
+        content += String.valueOf(root.val);
+        content += "->";
+        if(root.left != null){
+            count(root.left, content);
+        }
+        if(root.right != null){
+            count(root.right, content);
+        }
+    }
+}
