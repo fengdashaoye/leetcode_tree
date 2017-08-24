@@ -1,0 +1,60 @@
+Given a Binary Search Tree and a target number, return true if there exist two elements in the BST such that their sum is equal to the given target.
+
+Example 1:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 9
+
+Output: True
+Example 2:
+Input: 
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Target = 28
+
+Output: False
+这道题很简单，因为是BST，所以中序遍历是升序的，需要注意可能会存在某些节点的数值为负数。其实可能在中序遍历的时候就能给出结果。
+代码:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    ArrayList<Integer> list = new ArrayList<Integer>();
+    public boolean findTarget(TreeNode root, int k) {
+        tongji(root);
+        int panduan = 0;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int i = 0; i < list.size(); i++){
+            if(map.containsKey(k - list.get(i))){
+                return true;
+            }else{
+                map.put(list.get(i), 1);
+            }
+        }
+        return false;
+        
+    }
+    public void tongji(TreeNode root){
+        if(root == null){
+            return;
+        }
+        tongji(root.left);
+        list.add(root.val);
+        tongji(root.right);
+    }
+}
