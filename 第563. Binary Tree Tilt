@@ -1,0 +1,47 @@
+Given a binary tree, return the tilt of the whole tree.
+
+The tilt of a tree node is defined as the absolute difference between the sum of all left subtree node values and the sum of all right subtree node values. Null node has tilt 0.
+
+The tilt of the whole tree is defined as the sum of all nodes' tilt.
+Example:
+Input: 
+         1
+       /   \
+      2     3
+Output: 1
+Explanation: 
+Tilt of node 2 : 0
+Tilt of node 3 : 0
+Tilt of node 1 : |2-3| = 1
+Tilt of binary tree : 0 + 0 + 1 = 1
+题意:树的倾斜值为所有节点的倾斜值之和，对于一个节点的倾斜值，其等于它左子树所有节点的和减去右子树所有节点之和的绝对值.
+思路:
+这道题先写一个count函数，其求出以某个节点为根节点的树的节点值之和。。然后套到大的函数中，不断遍历每个节点，以该节点的左子树和右子树为参数节点计算
+倾斜值，然后在大的函数中以该节点的左节点和右节点为参数节点所有节点的倾斜值。
+root == null || (root.left == null && root.right == null)顺序不能变，否则会出现指针跑丢的情况。因为root为null时没有节点信息
+代码:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int findTilt(TreeNode root) {
+        if(root == null || (root.left == null && root.right == null)){
+            return 0;
+        }
+        int left = count(root.left);
+        int right = count(root.right);
+        return Math.abs(left - right) + findTilt(root.left) + findTilt(root.right);
+    }
+    public int count(TreeNode root){//root为子树的根节点
+        if(root == null){
+            return 0;
+        }
+        return root.val + count(root.left) + count(root.right);
+    }
+}
