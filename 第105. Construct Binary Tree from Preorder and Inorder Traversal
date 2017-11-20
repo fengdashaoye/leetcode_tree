@@ -1,0 +1,67 @@
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+思路：其实这道题的递归思想非常简单，只要不断得找到左子树的起始和结束坐标，右子树的起始和结束坐标。
+例如：
+index: 0 1 2 3 4 5 6
+     先序遍历为: 1 2 4 5 3 6 7 
+     中序遍历为: 4 2 5 1 6 3 7
+1. 先序遍历的从左数第一个为整棵树的根节点。
+2. 中序遍历中根节点是左子树右子树的分割点。
+
+再看这个树的左子树：
+     先序遍历为: 2 4 5 
+     中序遍历为: 4 2 5
+依然可以套用上面发现的规律。
+
+右子树：
+     先序遍历为: 3 6 7 
+     中序遍历为: 6 3 7
+也是可以套用上面的规律的。
+
+首先通过先序遍历的数组的首先的值为该子树的根节点，然后通过该根节点的值在中序遍历的数组中找到坐标in_index，用in_index-in_start得到左子树的长度
+然后利用长度，在先序遍历的数组中找到左子树的结束坐标。再然后找到右子树的坐标即可。
+
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder == null || preorder.length <= 0 || inorder == null 
+           || inorder.length <= 0 || preorder.length != inorder.length){
+            return null;
+        }
+        return builder(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+    
+    public TreeNode builder(int[] preorder, int pre_start, int pre_end, int[] inorder, int in_start, int in_end){
+        if(pre_start > pre_end || in_start > in_end){
+            return null;
+        }
+        TreeNode root = new TreeNode(preorder[pre_start]);
+        int in_index = find(preorder[pre_start], inorder);
+        int left_tree_len = in_index - in_start;
+        root.left = builder(preorder, pre_start + 1, pre_start + left_tree_len, inorder, in_start, in_index - 1);
+        root.right = builder(preorder, pre_start + left_tree_len + 1, pre_end, inorder, in_index + 1, in_end);
+        
+        return root;
+    }
+    
+    public int find(int target, int[] inorder){
+        for(int i = 0; i < inorder.length; i++){
+            if(inorder[i] == target){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
