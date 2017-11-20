@@ -1,0 +1,33 @@
+Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+
+思路：数组升序，平衡二叉树，即根节点左边的节点值比根节点值小，根节点右边的节点值比根节点大。
+假设根节点坐标为index，左子树在数组中的起始坐标为0，终止为index - 1.右子树在数组中的起始坐标为index + 1,终止为length - 1.
+又要高度平衡，所以每次找根节点的坐标为(起始坐标+终止坐标)/2
+
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if(nums == null || nums.length <= 0){
+            return null;
+        }
+        return builder(nums, 0, (nums.length-1) / 2, nums.length - 1);
+    }
+    public TreeNode builder(int[] nums, int start, int number, int end){
+        if(start > number || number > end){
+            return null;
+        }
+        TreeNode root = new TreeNode(nums[number]);
+        root.left = builder(nums, start, (start + number - 1) / 2, number - 1);
+        root.right = builder(nums, number + 1, (number + end + 1) / 2, end);
+        return root;
+    }
+}
