@@ -1,0 +1,101 @@
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+
+思路：我最开始的想法是把这条链表变成动态数组，再套用之前的代码解决，但是在最后一个测试用例时超时了。大概因为把这个链表变成动态数组也花费
+了大量的时间。，看了别人的代码，思路非常巧妙。
+代码：超时了
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        ArrayList<Integer> content = new ArrayList<Integer>();
+        while(head != null){
+            content.add(head.val);
+            head = head.next;
+        }
+        for(int i = 0; i < content.size(); i++){
+            System.out.println(content.get(i));
+        }
+        return builder(content, 0, (content.size() - 1) / 2, content.size() - 1);
+    }
+    public TreeNode builder(ArrayList<Integer> content, int start, int middle, int end){
+        if(start >  middle || middle > end){
+            return null;
+        }
+        TreeNode root = new TreeNode(content.get(middle));
+        root.left = builder(content, start, (start + middle - 1) / 2, middle - 1);
+        root.right = builder(content, middle + 1, (middle + end + 1) / 2, end);
+        return root;
+    }
+}
+方法是没错的，但是超时了。
+[-999,-998,-997,-996,-995,-994,-993,-992,-991,-990,-989,-988,-987,-986,-985,-984,-983,-982,-981,-980,-979,-978,
+-977,-976,-975,-974,-973,-972,-971,-970,-969,-968,-967,-966,-965,-964,-963,-962,-961,-960,-959,-958,-957,-956,-955,
+-954,-953,-952,-951,-950,-949,-948,-947,-946,-945,-944,-943,-942,-941,-940,-939,-938,-937,-936,-935,-934,-933,-932,-931
+,-930,-929,-928,-927,-926,-925,-924,-923,-922,-921,-920,-919,-918,-917,-916,.....]
+
+
+fast每次跑两步，slow每次跑1步，当fast跑到tail是slow为中间节点，此时head-slow为左子树,slow.next-tail为右子树
+
+代码：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null){
+            return null;
+        }
+        return builder(head, null);
+    }
+    public TreeNode builder(ListNode head, ListNode tail){
+        ListNode fast = head;
+        ListNode slow = head;
+        if(head == tail){
+            return null;
+        }
+        while(fast != tail && fast.next != tail){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        TreeNode root = new TreeNode(slow.val);
+        root.left = builder(head, slow);
+        root.right = builder(slow.next, tail);
+        return root;
+    }
+}
+
+
+
+
