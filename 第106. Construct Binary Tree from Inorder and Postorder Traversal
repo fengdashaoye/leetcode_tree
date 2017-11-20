@@ -1,0 +1,60 @@
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+例子：0,1,2,3,4,5,6
+中序:3,1,4,0,5,2,6
+后序：3,4,1,5,6,2
+
+中序初始时，起始坐标为0，终止为length-1。
+先序初始时，起始坐标为0，终止为length-1。
+后序初始时，起始坐标为length-1，终止为0。
+
+思路：知道中序+后序，求二叉树，这道题思路和知道先序+中序->二叉树一样，重点是找出左子树和右子树在中序数组和后序数组中的起始坐标和终止坐标。
+首先定义in_start和in_end为中序的起始和终止，post_start和post_end为终止，对于后续,post_start为length-1，因为根据start找根节点
+的值。根据根节点的值在中序中找到根节点坐标in_index，用in_index-in_start为左子树的长度left_len(节点的数量).
+那么对于左子树，在中序数组中的起始坐标为in_start，终止为in_index-1，在后序数组中起始为post_end + left_len - 1,终止为post_end
+对于右子树，在中序数组中的起始坐标为in_index + 1,终止为in_end，在后序数组中起始为post_start - 1,终止为post_end + left_len
+
+注意对于后序来说，post_start为子树的根节点，为右边，这是只需找到这棵子树在数组中最左边的坐标即可。
+
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if(inorder == null || inorder.length <= 0 || postorder == null 
+           || postorder.length <= 0 || inorder.length != postorder.length){
+            return null;
+        }
+        return builder(inorder, 0, inorder.length - 1, postorder, postorder.length - 1, 0);
+    }
+    public TreeNode builder(int[] inorder, int in_start, int in_end, int[] postorder, int post_start, int post_end){
+        if(in_start > in_end || post_end > post_start){
+            return null;
+        }
+        TreeNode root = new TreeNode(postorder[post_start]);
+        int in_index = find(inorder, postorder[post_start]);
+        int left_len = in_index - in_start;
+        
+        root.left = builder(inorder, in_start, in_index - 1, postorder, post_end + left_len - 1, post_end);
+        root.right = builder(inorder, in_index+ 1, in_end, postorder, post_start - 1, post_end + left_len);
+        return root;
+    }
+    public int find(int[] inorder, int target){
+        for(int i = 0; i < inorder.length; i++){
+            if(inorder[i] == target){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
