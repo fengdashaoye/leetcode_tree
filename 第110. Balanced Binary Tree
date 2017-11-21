@@ -1,0 +1,118 @@
+Given a binary tree, determine if it is height-balanced.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of
+every node never differ by more than 1.
+
+思路：判断一个节点的左右子树深度是否符合要求，再判断每一个节点。两个步骤。我的代码是错误的
+这是别人的代码：很厉害
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        if(root == null){
+            return true;
+        }
+        int left = depth(root.left);
+        int right = depth(root.right);
+        return Math.abs(left - right) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+    }
+    public int depth(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        return Math.max(depth(root.left), depth(root.right)) + 1;
+    }
+}
+
+我的代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    boolean result = true;
+    int basic = 0;
+    public boolean isBalanced(TreeNode root) {
+        if(root == null || (root.left == null && root.right == null)){
+            return true;
+        }
+        boolean result1 = true;
+        result1 = judge(root);
+        return result1;
+    }
+    public boolean judge(TreeNode root){
+        basic = 0;
+        if(root.left == null && root.right == null){
+            return true;
+        }
+        int kong = 0;
+        if(root.left != null){
+            if(root.right == null){
+                kong = 1;
+            }
+            result = result && panduan(root, 0, kong) && judge(root.left);
+        }
+        if(root.right != null){
+            if(root.left == null){
+                kong = 1;
+            }
+            result = result && panduan(root, 0, kong) && judge(root.right);
+        }
+        return result;
+    }
+    public boolean panduan(TreeNode root, int length, int kong){//这是一个节点的对错
+        if(root.left == null && root.right == null){
+            System.out.println(kong + " " + length + " " + basic);
+            if(kong != 0){
+                if(length - basic >= 2){
+                    return false;
+                }
+                return true;
+            }else{
+                if(basic == 0){
+                    basic = length;
+                    return true;
+                }else{
+                    if(length > basic){
+                        basic = length;
+                        if(length - basic >= 2){
+                            return false;
+                        }else{
+                            return true;
+                        }
+                    }else{
+                        if(basic - length >= 2){
+                            return false;
+                        }else{
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        if(root.left != null && root.right != null){
+            System.out.println("left + right");
+            return panduan(root.left, length + 1, kong) && panduan(root.right, length + 1, kong);
+        }else if(root.left == null && root.right != null){
+            System.out.println("right");
+            return panduan(root.right, length + 1, kong);
+        }
+        System.out.println("left");
+        return panduan(root.left, length + 1, kong);
+        
+    }
+}
