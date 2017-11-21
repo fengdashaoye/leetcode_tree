@@ -3,7 +3,7 @@ Given a binary tree, determine if it is height-balanced.
 For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of
 every node never differ by more than 1.
 
-思路：判断一个节点的左右子树深度是否符合要求，再判断每一个节点。两个步骤。我的代码是错误的
+思路：判断一个节点的左右子树深度是否符合要求(需要计算出左右深度，再判断)，再判断每一个节点。两个步骤。我的代码是错误的
 这是别人的代码：很厉害
 /**
  * Definition for a binary tree node.
