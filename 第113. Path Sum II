@@ -1,0 +1,55 @@
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+For example:
+Given the below binary tree and sum = 22,
+              5
+             / \
+            4   8
+           /   / \
+          11  13  4
+         /  \    / \
+        7    2  5   1
+return
+[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+
+思路：这道题跟回溯的思想很想，当为叶子节点且和sum=0时加入result，利用先序不断遍历所有节点
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if(root == null){
+            return result;
+        }
+        backtrack(root, result, new ArrayList<Integer>(), sum);
+        return result;
+    }
+    public void backtrack(TreeNode root, List<List<Integer>> result, List<Integer> content, int sum){
+        if(root == null){
+            return;
+        }
+        content.add(root.val);
+        if(root.left == null && root.right == null && sum == root.val){
+         //必须要叶子，否则如果一个节点有左子树，没有右子树，当其遍历到右子树时就可以跳出了，但是该节点不是叶子节点
+            result.add(new ArrayList<Integer>(content));
+            content.remove(content.size() - 1);
+            return;
+        }else{
+            backtrack(root.left, result, content, sum - root.val);
+            backtrack(root.right, result, content, sum - root.val);
+        }
+        
+        content.remove(content.size() - 1);
+    }
+}
