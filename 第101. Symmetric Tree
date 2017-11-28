@@ -1,0 +1,78 @@
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+But the following [1,2,2,null,3,null,3] is not:
+    1
+   / \
+  2   2
+   \   \
+   3    3
+   
+   记得剑指offer中有一道题为把一个二叉树变成其镜像
+   其代码为：
+   /**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    public void Mirror(TreeNode root) {
+        //if(root == null || (root.left == null && root.right == null))
+            //return;
+        if(root == null)
+            return;
+        TreeNode middle = root.left; //非叶节点
+        root.left = root.right;
+        root.right = middle;   
+       
+        if(root.left != null)
+            Mirror(root.left);
+        if(root.right != null)
+            Mirror(root.right);
+       
+    }
+}
+
+在本题中，判断一个二叉树是否为镜像：
+思路：递归判断左孩子的左节点与右孩子的右节点，与左孩子的右节点与右孩子的左节点。递归不断往下面判断。
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null){
+            return true;
+        }
+        return is_Symmetric(root.left, root.right);
+    }
+    public boolean is_Symmetric(TreeNode left, TreeNode right){
+        if(left == null || right == null){
+            return left == right;
+        }
+        if(left.val != right.val){
+            return false;
+        }
+        return is_Symmetric(left.left, right.right) && is_Symmetric(left.right, right.left);
+    }
+}
