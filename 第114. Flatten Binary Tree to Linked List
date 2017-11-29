@@ -1,0 +1,112 @@
+Given a binary tree, flatten it to a linked list in-place.
+
+For example,
+Given
+
+         1
+        / \
+       2   5
+      / \   \
+     3   4   6
+The flattened tree should look like:
+   1
+    \
+     2
+      \
+       3
+        \
+         4
+          \
+           5
+            \
+             6
+ 
+ 以上述为里看变化过程。
+         1
+        / \
+       2   5
+      / \   \
+     3   4   6
+ 
+        |
+        
+         1
+        / 
+       2   
+      / \   
+     3   4 
+          \
+            5
+              \
+                6
+                
+          
+          |
+          
+          1
+            \
+              2
+             /  \
+            3     4
+                    \
+                      5
+                        \
+                          6
+                          
+           |
+           
+           1
+             \
+               2
+              /
+             3
+               \
+                 4
+                   \
+                     5
+                      \
+                        6
+   最后变成：
+   1
+    \
+     2
+      \
+       3
+        \
+         4
+          \
+           5
+            \
+             6
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public void flatten(TreeNode root) {
+        if(root == null || (root.left == null && root.right == null)){
+            return;
+        }
+        while(root != null){
+            if(root.left == null){
+                root = root.right;
+                continue;
+            }
+            TreeNode left = root.left;
+            while(left.right != null){
+                left = left.right;
+            }
+            left.right = root.right;
+            root.right = root.left;//不能root.right = left,因为left已经变了
+            root.left = null;
+            root = root.right;
+        }
+        
+    }
+}
