@@ -1,0 +1,89 @@
+题目：
+Given two non-empty binary trees s and t, check whether tree t has exactly the same structure and node values with a subtree of s. 
+A subtree of s is a tree consists of a node in s and all of this node's descendants. The tree s could also be considered as a 
+subtree of itself.
+
+Example 1:
+Given tree s:
+
+     3
+    / \
+   4   5
+  / \
+ 1   2
+Given tree t:
+   4 
+  / \
+ 1   2
+Return true, because t has the same structure and node values with a subtree of s.
+Example 2:
+Given tree s:
+
+     3
+    / \
+   4   5
+  / \
+ 1   2
+    /
+   0
+Given tree t:
+   4
+  / \
+ 1   2
+Return false.
+
+思路：这道题其实非常简单，定义一个全局变量result，初始为false，让它与每次测量的结果相或，只要有一次返回true，结果即为true。
+测量过程是这样的，利用先序变量依次变量s中的节点i，以该节点i为s子树的根节点，判断该子树与树t是否相等。
+判断相等的过程也为先序变量。
+有如下几个情况，如果(s == null && t != null) || (s != null && t == null)则返回false，因为树的节点数量不等，如果都为null则返回true。
+如果节点的值不相等，则返回false。采用先序变量,最终返回的是panduan2(s.left, t.left)&&panduan2(s.right, t.right)；
+
+不错，有进步。
+
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    boolean result = false;
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if(s == null && t != null){
+            return false;
+        }
+        panduan(s, t);
+        return result;
+    }
+    public void panduan(TreeNode s, TreeNode t){
+        if(s == null){
+            return;
+        }
+        if(s.val == t.val){
+            result = result || panduan2(s, t);
+        }
+        panduan(s.left, t);
+        panduan(s.right, t);
+    }
+    
+    public boolean panduan2(TreeNode s, TreeNode t){
+        if((s == null && t != null) || (s != null && t == null)){
+            return false;
+        }
+        if( s == null && t == null){
+            return true;
+        }
+        if(s.val != t.val){
+            return false;
+        }
+        
+        return panduan2(s.left, t.left) && panduan2(s.right, t.right);
+        
+    }
+    
+}
+
