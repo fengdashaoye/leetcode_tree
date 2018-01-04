@@ -1,0 +1,112 @@
+Implement a trie with insert, search, and startsWith methods.
+
+Note:
+You may assume that all inputs are consist of lowercase letters a-z.
+
+字典树：
+rie树又被称为字典树、前缀树，是一种用于快速检索的多叉树。Tried树可以利用字符串的公共前缀来节省存储空间。
+但如果系统存在大量没有公共前缀的字符串，相应的Trie树将非常消耗内存。（下图为Wiki上的Trie树示意图， https://en.wikipedia.org/wiki/Trie）
+Trie树的基本性质如下：
+根节点不包括字符，除根节点外每个节点包括一个支付。
+从根节点到某一节点，路径上经过的字符连接起来，即为对应的字符串。
+每个节点的所有子节点包含的字符串各不相同。
+本题中的Trie树可以简单实现如下：
+Trie树节点数据结构定义如下：
+val表示该节点对应的字符
+子节点简单用一个数组表示，这样实现比较简单，但比较耗费内存
+isWord标记从根节点到该节点是否表示一个单词，还是另一单词的前缀。
+
+思路：创建字典树，插入节点，搜索该字符串是否存在于该字符串中，搜索一个字符串是否为该字典树中其他字符串的前缀。
+第二个和第三个的区别。第二个，最后一个字符节点的状态.exist为true，第三个则不需。。
+代码：
+class TrieNode{
+    boolean exist = false;  
+    TrieNode[] children;
+    char val; 
+    // Initialize your data structure here.  
+    public TrieNode() {  
+          
+    }  
+    public TrieNode(char c) {  
+        this.val = c;  
+    }  
+}
+public class Trie {
+    private TrieNode root;
+
+    /** Initialize your data structure here. */
+    //字典树
+    public Trie() {
+        root = new TrieNode();
+        
+    }
+    
+    /** Inserts a word into the trie. */
+    public void insert(String word) {
+        if(word == null || word.length() == 0){
+            return;
+        }
+        TrieNode pre = root;
+        for(int i = 0; i < word.length(); i++){
+            if(pre.children == null){
+                pre.children = new TrieNode[26];
+            }
+            int index = word.charAt(i) - 'a';
+            if(pre.children[index] == null){
+                pre.children[index] = new TrieNode(word.charAt(i));
+            }
+            pre = pre.children[index];
+            if(i == word.length() - 1){
+                pre.exist = true;//该字符串是存在的
+            }
+        }
+        
+    }
+    
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        if(word == null || word.length() == 0){
+            return false;
+        }
+        TrieNode pre = root;
+        for(int i = 0; i < word.length(); i++){
+            int index = word.charAt(i) - 'a';
+            if(pre.children == null || pre.children[index] == null){//中途找不到该字符串，返回false
+                return false;
+            }
+            if(i == (word.length() - 1) && pre.children[index].exist == false){//如果最后一个位置没有被标明为true，则标明该字符串是不存在的
+                return false;
+            }
+            pre = pre.children[index];
+        }
+        return true;
+        
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        if(prefix == null || prefix.length() == 0){
+            return false;
+        }
+        TrieNode pre = root;
+        for(int i = 0; i < prefix.length(); i++){
+            int index = prefix.charAt(i) - 'a';
+            if(pre.children == null || pre.children[index] == null){
+                return false;
+            }
+            pre = pre.children[index];
+        }
+        return true;
+        
+    }
+}
+
+
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * boolean param_2 = obj.search(word);
+ * boolean param_3 = obj.startsWith(prefix);
+ */
